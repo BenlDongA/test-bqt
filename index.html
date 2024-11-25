@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kiểm tra động từ bất quy tắc</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    table {
+      margin: 0 auto;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+    .buttons {
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Kiểm tra động từ bất quy tắc</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Động từ nguyên thể</th>
+        <th>Quá khứ đơn</th>
+        <th>Quá khứ phân từ</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td id="baseVerb">---</td>
+        <td><input type="text" id="pastSimple"></td>
+        <td><input type="text" id="pastParticiple"></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="buttons">
+    <button onclick="checkAnswer()">Kiểm tra</button>
+    <button onclick="getRandomVerb()">Next</button>
+  </div>
+  <div class="result" id="result"></div>
+
+  <script>
+    const irregularVerbs = [
+      { base: "arise", past: "arose", participle: "arisen" },
+      { base: "be", past: "was/were", participle: "been" },
+      { base: "beat", past: "beat", participle: "beaten" },
+      { base: "become", past: "became", participle: "become" },
+      { base: "begin", past: "began", participle: "begun" },
+      { base: "bend", past: "bent", participle: "bent" },
+      { base: "bet", past: "bet", participle: "bet" },
+      { base: "bite", past: "bit", participle: "bitten" },
+      { base: "blow", past: "blew", participle: "blown" },
+      { base: "break", past: "broke", participle: "broken" },
+      { base: "bring", past: "brought", participle: "brought" },
+      { base: "build", past: "built", participle: "built" },
+      { base: "buy", past: "bought", participle: "bought" },
+      { base: "catch", past: "caught", participle: "caught" },
+      { base: "choose", past: "chose", participle: "chosen" },
+      { base: "come", past: "came", participle: "come" },
+      { base: "cost", past: "cost", participle: "cost" },
+      { base: "cut", past: "cut", participle: "cut" },
+      { base: "dig", past: "dug", participle: "dug" },
+      { base: "do", past: "did", participle: "done" },
+      { base: "draw", past: "drew", participle: "drawn" },
+      { base: "drink", past: "drank", participle: "drunk" },
+      { base: "drive", past: "drove", participle: "driven" },
+      { base: "eat", past: "ate", participle: "eaten" },
+      { base: "fall", past: "fell", participle: "fallen" },
+      { base: "feed", past: "fed", participle: "fed" },
+      { base: "feel", past: "felt", participle: "felt" },
+      { base: "fight", past: "fought", participle: "fought" },
+      { base: "find", past: "found", participle: "found" },
+      { base: "fly", past: "flew", participle: "flown" },
+      { base: "forget", past: "forgot", participle: "forgotten" },
+      { base: "forgive", past: "forgave", participle: "forgiven" },
+      { base: "freeze", past: "froze", participle: "frozen" },
+      { base: "get", past: "got", participle: "gotten" },
+      { base: "give", past: "gave", participle: "given" },
+      { base: "go", past: "went", participle: "gone" },
+      { base: "grow", past: "grew", participle: "grown" },
+      { base: "hang", past: "hung", participle: "hung" },
+      { base: "have", past: "had", participle: "had" },
+      { base: "hear", past: "heard", participle: "heard" },
+      { base: "hide", past: "hid", participle: "hidden" },
+      { base: "hit", past: "hit", participle: "hit" },
+      { base: "hold", past: "held", participle: "held" },
+      { base: "hurt", past: "hurt", participle: "hurt" },
+      { base: "keep", past: "kept", participle: "kept" },
+      { base: "know", past: "knew", participle: "known" },
+      { base: "lay", past: "laid", participle: "laid" },
+      { base: "lead", past: "led", participle: "led" },
+      { base: "leave", past: "left", participle: "left" },
+      { base: "lend", past: "lent", participle: "lent" },
+      { base: "let", past: "let", participle: "let" },
+      { base: "lie", past: "lay", participle: "lain" },
+      { base: "lose", past: "lost", participle: "lost" },
+      { base: "make", past: "made", participle: "made" },
+      { base: "mean", past: "meant", participle: "meant" },
+      { base: "meet", past: "met", participle: "met" },
+      { base: "pay", past: "paid", participle: "paid" },
+      { base: "put", past: "put", participle: "put" },
+      { base: "read", past: "read", participle: "read" },
+      { base: "ride", past: "rode", participle: "ridden" },
+      { base: "ring", past: "rang", participle: "rung" },
+      { base: "rise", past: "rose", participle: "risen" },
+      { base: "run", past: "ran", participle: "run" },
+      { base: "say", past: "said", participle: "said" },
+      { base: "see", past: "saw", participle: "seen" },
+      { base: "sell", past: "sold", participle: "sold" },
+      { base: "send", past: "sent", participle: "sent" },
+      { base: "set", past: "set", participle: "set" },
+      { base: "shake", past: "shook", participle: "shaken" },
+      { base: "show", past: "showed", participle: "shown" },
+      { base: "shut", past: "shut", participle: "shut" },
+      { base: "sing", past: "sang", participle: "sung" },
+      { base: "sit", past: "sat", participle: "sat" },
+      { base: "sleep", past: "slept", participle: "slept" },
+      { base: "speak", past: "spoke", participle: "spoken" },
+      { base: "spend", past: "spent", participle: "spent" },
+      { base: "stand", past: "stood", participle: "stood" },
+      { base: "steal", past: "stole", participle: "stolen" },
+      { base: "stick", past: "stuck", participle: "stuck" },
+      { base: "strike", past: "struck", participle: "struck" },
+      { base: "swear", past: "swore", participle: "sworn" },
+      { base: "swim", past: "swam", participle: "swum" },
+      { base: "take", past: "took", participle: "taken" },
+      { base: "teach", past: "taught", participle: "taught" },
+      { base: "tell", past: "told", participle: "told" },
+      { base: "think", past: "thought", participle: "thought" },
+      { base: "throw", past: "threw", participle: "thrown" },
+      { base: "understand", past: "understood", participle: "understood" },
+      { base: "wake", past: "woke", participle: "woken" },
+      { base: "wear", past: "wore", participle: "worn" },
+      { base: "win", past: "won", participle: "won" },
+      { base: "write", past: "wrote", participle: "written" }
+    ];
+
+    let currentVerb = {};
+
+    function getRandomVerb() {
+      currentVerb = irregularVerbs[Math.floor(Math.random() * irregularVerbs.length)];
+      document.getElementById("baseVerb").innerText = currentVerb.base;
+      document.getElementById("pastSimple").value = "";
+      document.getElementById("pastParticiple").value = "";
+      document.getElementById("result").innerText = "";
+    }
+
+    function checkAnswer() {
+      const userPast = document.getElementById("pastSimple").value.trim();
+      const userParticiple = document.getElementById("pastParticiple").value.trim();
+
+      if (userPast.toLowerCase() === currentVerb.past.toLowerCase() &&
+          userParticiple.toLowerCase() === currentVerb.participle.toLowerCase()) {
+        document.getElementById("result").innerText = "✔️ Chính xác! Tốt lắm!";
+        document.getElementById("result").style.color = "green";
+      } else {
+        document.getElementById("result").innerText = `❌ Sai rồi! Đáp án đúng là: ${currentVerb.past} / ${currentVerb.participle}`;
+        document.getElementById("result").style.color = "red";
+      }
+    }
+
+    // Khởi tạo câu hỏi đầu tiên
+    getRandomVerb();
+  </script>
+</body>
+</html>
