@@ -62,14 +62,9 @@
 
   <script>
     const irregularVerbs = [
-      { base: "arise", past: "arose", participle: "arisen" },
       { base: "be", past: "was/were", participle: "been" },
-      { base: "beat", past: "beat", participle: "beaten" },
       { base: "become", past: "became", participle: "become" },
       { base: "begin", past: "began", participle: "begun" },
-      { base: "bend", past: "bent", participle: "bent" },
-      { base: "bet", past: "bet", participle: "bet" },
-      { base: "bite", past: "bit", participle: "bitten" },
       { base: "blow", past: "blew", participle: "blown" },
       { base: "break", past: "broke", participle: "broken" },
       { base: "bring", past: "brought", participle: "brought" },
@@ -80,35 +75,27 @@
       { base: "come", past: "came", participle: "come" },
       { base: "cost", past: "cost", participle: "cost" },
       { base: "cut", past: "cut", participle: "cut" },
-      { base: "dig", past: "dug", participle: "dug" },
       { base: "do", past: "did", participle: "done" },
       { base: "draw", past: "drew", participle: "drawn" },
       { base: "drink", past: "drank", participle: "drunk" },
       { base: "drive", past: "drove", participle: "driven" },
       { base: "eat", past: "ate", participle: "eaten" },
       { base: "fall", past: "fell", participle: "fallen" },
-      { base: "feed", past: "fed", participle: "fed" },
       { base: "feel", past: "felt", participle: "felt" },
-      { base: "fight", past: "fought", participle: "fought" },
       { base: "find", past: "found", participle: "found" },
       { base: "fly", past: "flew", participle: "flown" },
       { base: "forget", past: "forgot", participle: "forgotten" },
-      { base: "forgive", past: "forgave", participle: "forgiven" },
-      { base: "freeze", past: "froze", participle: "frozen" },
       { base: "get", past: "got", participle: "gotten" },
       { base: "give", past: "gave", participle: "given" },
       { base: "go", past: "went", participle: "gone" },
       { base: "grow", past: "grew", participle: "grown" },
-      { base: "hang", past: "hung", participle: "hung" },
       { base: "have", past: "had", participle: "had" },
       { base: "hear", past: "heard", participle: "heard" },
       { base: "hide", past: "hid", participle: "hidden" },
       { base: "hit", past: "hit", participle: "hit" },
       { base: "hold", past: "held", participle: "held" },
-      { base: "hurt", past: "hurt", participle: "hurt" },
       { base: "keep", past: "kept", participle: "kept" },
       { base: "know", past: "knew", participle: "known" },
-      { base: "lay", past: "laid", participle: "laid" },
       { base: "lead", past: "led", participle: "led" },
       { base: "leave", past: "left", participle: "left" },
       { base: "lend", past: "lent", participle: "lent" },
@@ -123,26 +110,17 @@
       { base: "read", past: "read", participle: "read" },
       { base: "ride", past: "rode", participle: "ridden" },
       { base: "ring", past: "rang", participle: "rung" },
-      { base: "rise", past: "rose", participle: "risen" },
       { base: "run", past: "ran", participle: "run" },
       { base: "say", past: "said", participle: "said" },
       { base: "see", past: "saw", participle: "seen" },
-      { base: "sell", past: "sold", participle: "sold" },
       { base: "send", past: "sent", participle: "sent" },
       { base: "set", past: "set", participle: "set" },
-      { base: "shake", past: "shook", participle: "shaken" },
-      { base: "show", past: "showed", participle: "shown" },
-      { base: "shut", past: "shut", participle: "shut" },
       { base: "sing", past: "sang", participle: "sung" },
-      { base: "sit", past: "sat", participle: "sat" },
       { base: "sleep", past: "slept", participle: "slept" },
       { base: "speak", past: "spoke", participle: "spoken" },
       { base: "spend", past: "spent", participle: "spent" },
       { base: "stand", past: "stood", participle: "stood" },
       { base: "steal", past: "stole", participle: "stolen" },
-      { base: "stick", past: "stuck", participle: "stuck" },
-      { base: "strike", past: "struck", participle: "struck" },
-      { base: "swear", past: "swore", participle: "sworn" },
       { base: "swim", past: "swam", participle: "swum" },
       { base: "take", past: "took", participle: "taken" },
       { base: "teach", past: "taught", participle: "taught" },
@@ -157,31 +135,42 @@
     ];
 
     let currentVerb = {};
+let currentIndex = 0;
 
-    function getRandomVerb() {
-      currentVerb = irregularVerbs[Math.floor(Math.random() * irregularVerbs.length)];
-      document.getElementById("baseVerb").innerText = currentVerb.base;
-      document.getElementById("pastSimple").value = "";
-      document.getElementById("pastParticiple").value = "";
-      document.getElementById("result").innerText = "";
-    }
+function getNextVerb() {
+  if (currentIndex >= irregularVerbs.length) {
+    document.getElementById("result").innerText = "🎉 Bạn đã hoàn thành tất cả các từ! Hãy bắt đầu lại từ đầu.";
+    document.getElementById("result").style.color = "blue";
+    currentIndex = 0; // Reset lại danh sách
+    return;
+  }
 
-    function checkAnswer() {
-      const userPast = document.getElementById("pastSimple").value.trim();
-      const userParticiple = document.getElementById("pastParticiple").value.trim();
+  currentVerb = irregularVerbs[currentIndex];
+  currentIndex++; // Tăng chỉ số để lấy từ tiếp theo lần sau
 
-      if (userPast.toLowerCase() === currentVerb.past.toLowerCase() &&
-          userParticiple.toLowerCase() === currentVerb.participle.toLowerCase()) {
-        document.getElementById("result").innerText = "✔️ Chính xác! Tốt lắm!";
-        document.getElementById("result").style.color = "green";
-      } else {
-        document.getElementById("result").innerText = `❌ Sai rồi! Đáp án đúng là: ${currentVerb.past} / ${currentVerb.participle}`;
-        document.getElementById("result").style.color = "red";
-      }
-    }
+  document.getElementById("baseVerb").innerText = currentVerb.base;
+  document.getElementById("pastSimple").value = "";
+  document.getElementById("pastParticiple").value = "";
+  document.getElementById("result").innerText = "";
+}
 
-    // Khởi tạo câu hỏi đầu tiên
-    getRandomVerb();
+function checkAnswer() {
+  const userPast = document.getElementById("pastSimple").value.trim();
+  const userParticiple = document.getElementById("pastParticiple").value.trim();
+
+  if (userPast.toLowerCase() === currentVerb.past.toLowerCase() &&
+      userParticiple.toLowerCase() === currentVerb.participle.toLowerCase()) {
+    document.getElementById("result").innerText = "✔️ Chính xác! Tốt lắm!";
+    document.getElementById("result").style.color = "green";
+  } else {
+    document.getElementById("result").innerText = `❌ Sai rồi! Đáp án đúng là: ${currentVerb.past} / ${currentVerb.participle}`;
+    document.getElementById("result").style.color = "red";
+  }
+}
+
+// Khởi tạo câu hỏi đầu tiên
+getNextVerb();
+
   </script>
 </body>
 </html>
